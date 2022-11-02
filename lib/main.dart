@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:quiz/quiz.dart';
 import './question.dart';
 import './answer.dart';
+import './result.dart';
 
 void main() {
   runApp(MyApp());
@@ -26,7 +28,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    var questions = [
+    final questions = [
       {
         'questionText': 'What\'s your favourite color',
         'answers': ['black', 'blue', 'red', 'green']
@@ -46,17 +48,9 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: Text('TaxiPartner'),
         ),
-        body: Column(
-          children: [
-            Question(questions[questionIndex]['questionText'] as String),
-            ...(questions[questionIndex]['answers'] as List<String>).map((answer) {
-              return Answer(_answerQuestion, answer);
-            }).toList()
-            // Answer(_answerQuestion),
-            // Answer(_answerQuestion),
-            // Answer(_answerQuestion),
-          ],
-        ),
+        body: questionIndex < questions.length
+            ? Quiz(_answerQuestion, questions, questionIndex)
+            : Result(),
       ),
     );
   }
