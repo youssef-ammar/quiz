@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quiz/quiz.dart';
-import './question.dart';
-import './answer.dart';
+
 import './result.dart';
 
 void main() {
@@ -17,13 +16,22 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   var questionIndex = 0;
+  var totalScore = 0;
 
-  void _answerQuestion() {
+  void _resetQuiz() {
+    setState(() {
+      questionIndex = 0;
+      totalScore = 0;
+    });
+        }
+
+  void _answerQuestion(int score) {
+    totalScore += score;
     setState(() {
       questionIndex += 1;
     });
 
-    print(questionIndex);
+    print(totalScore);
   }
 
   @override
@@ -31,15 +39,30 @@ class _MyAppState extends State<MyApp> {
     final questions = [
       {
         'questionText': 'What\'s your favourite color',
-        'answers': ['black', 'blue', 'red', 'green']
+        'answers': [
+          {'text': 'Black', 'score': 10},
+          {'text': 'Blue', 'score': 8},
+          {'text': 'Red', 'score': 5},
+          {'text': 'Green', 'score': 3}
+        ]
       },
       {
         'questionText': 'What\'s your favourite animal',
-        'answers': ['black', 'blue', 'red', 'green']
+        'answers': [
+          {'text': 'Cat', 'score': 10},
+          {'text': 'Bird', 'score': 8},
+          {'text': 'Rabbit', 'score': 5},
+          {'text': 'Dog', 'score': 3}
+        ]
       },
       {
         'questionText': 'What\'s your favourite instructor',
-        'answers': ['Max', 'Max', 'Max', 'Max']
+        'answers': [
+          {'text': 'Max', 'score': 1},
+          {'text': 'Max', 'score': 1},
+          {'text': 'Max', 'score': 1},
+          {'text': 'Max', 'score': 1}
+        ]
       }
     ];
     //print ();
@@ -49,8 +72,12 @@ class _MyAppState extends State<MyApp> {
           title: Text('TaxiPartner'),
         ),
         body: questionIndex < questions.length
-            ? Quiz(_answerQuestion, questions, questionIndex)
-            : Result(),
+            ? Quiz(
+          answerQuestion: _answerQuestion,
+          questions: questions,
+          questionIndex: questionIndex,
+        )
+            : Result(totalScore,()=>_resetQuiz()),
       ),
     );
   }
